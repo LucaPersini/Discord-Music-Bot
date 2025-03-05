@@ -5,7 +5,8 @@ import asyncio
 import json
 
 async def start_stream(search, ctx, voice_client):
-
+  if search == '':
+    search = "ac/dc back in black"
   ydl_opts = {
       "default_search": f'ytsearch:{search}',
       "format": "bestaudio",
@@ -18,7 +19,7 @@ async def start_stream(search, ctx, voice_client):
       print(search)
       sanitized_info = ydl.sanitize_info(info)
     except:
-      await ctx.send('Something went wrong')
+      await ctx.send('```Something went wrong```')
       return
 
   if sanitized_info["extractor"] == "youtube":
@@ -46,7 +47,7 @@ class Music_Bot(commands.Cog):
 
   @commands.command(brief="pong", description="pong")
   async def ping(self, ctx):
-    await ctx.send('pong')
+    await ctx.send('```pong```')
 
   @commands.command(brief="Start listening to music", descriprion="Type '!play [yt search or url]' to listen music")
   async def play(self, ctx, *search):
@@ -57,10 +58,10 @@ class Music_Bot(commands.Cog):
       except Exception as e:
         print(e)
     else:
-      await ctx.send("Enter in a voice channel first.")
+      await ctx.send("```Enter in a voice channel first```")
       return
 
-    message = await ctx.send(f'Working on it...')
+    message = await ctx.send(f'```Working on it...```')
 
     formatted_search = ''
     for value in search:
@@ -70,7 +71,7 @@ class Music_Bot(commands.Cog):
     print(formatted_search)    
 
     if song is not None:
-      await message.edit(content=f'Currently playing {song}')
+      await message.edit(content=f'```Currently playing {song}```')
 
   @commands.command(brief="Stop the current stream", descriprion="Type '!stop' to stop the current stream")
   async def stop(self, ctx):
@@ -93,11 +94,12 @@ class Music_Bot(commands.Cog):
     if channel is not None:
       await channel.disconnect()
 
-  @commands.command()
+  # command used during debug, delete all the messages in a text channel
+  """ @commands.command()
   async def clear(self, ctx):
     channel = ctx.message.channel
     messages = [message async for message in channel.history(limit=200)]
-    await channel.delete_messages(messages)
+    await channel.delete_messages(messages) """
 
 intents = discord.Intents.default()
 intents.message_content = True
