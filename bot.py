@@ -51,10 +51,14 @@ class Music_Bot(commands.Cog):
 
   @commands.command(brief="Start listening to music", descriprion="Type '!play [yt search or url]' to listen music")
   async def play(self, ctx, *search):
+    print(ctx.voice_client)
     if ctx.message.author.voice is not None:
       try:
-        channel = ctx.message.author.voice.channel
-        voice_client = await channel.connect()
+        if ctx.voice_client is None:
+          channel = ctx.message.author.voice.channel
+          voice_client = await channel.connect()
+        else:
+          voice_client = ctx.voice_client
       except Exception as e:
         print(e)
     else:
